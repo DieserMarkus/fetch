@@ -54,7 +54,7 @@ export class EditItem extends React.PureComponent<
     try {
       this.setState({ saveState: true })
       reactEvent.preventDefault()
-      console.log(this.props.location.state.item)
+
       await patchItem(this.props.auth.getIdToken(), this.props.location.state.item.itemId, this.props.location.state.event.eventId, {
         name: this.state.newItemName,
         done: (this.props.location.state.item.done ? this.props.location.state.item.done : false)

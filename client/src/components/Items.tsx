@@ -165,7 +165,7 @@ export class Items extends React.PureComponent<ItemsProps, ItemsState> {
     return (
       <Grid.Row>
         <Loader indeterminate active inline="centered">
-          FETCHing items
+        <h4>FETCHing items</h4>
         </Loader>
       </Grid.Row>
     )

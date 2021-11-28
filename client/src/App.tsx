@@ -1,6 +1,6 @@
 import { Component } from 'react'
 import { Route, Router, Switch } from 'react-router-dom'
-import { Grid, Menu, Segment, Divider } from 'semantic-ui-react'
+import { Grid, Menu, Segment, Divider, Header } from 'semantic-ui-react'
 import Auth from './auth/Auth'
 import { Location, History } from 'history'
 import { EditItem } from './components/EditItem'
@@ -10,9 +10,7 @@ import { NotFound } from './components/NotFound'
 import { Items } from './components/Items'
 import { Event } from './types/Event'
 import { Events } from './components/Events'
-
-//import { ReactComponent as Logo } from './logo.svg';
-//<Logo height="30" />
+import { ReactComponent as Logo } from './logo.svg';
 
 export interface AppProps {
   auth: Auth
@@ -60,6 +58,12 @@ export default class App extends Component<AppProps, AppState> {
         
         <Segment style={{ padding: '4em 0em' }} vertical>
           <Grid container stackable verticalAlign="middle">
+          <Grid.Row fullWidth>
+            <Divider clearing hidden />
+              <Logo height="100" />
+              <Header as="h1">FETCH: A little helper for your events</Header>
+            <Divider clearing hidden />
+          </Grid.Row>
             <Grid.Row>
               <Grid.Column width={16}>
                 <Router history={this.props.history}>

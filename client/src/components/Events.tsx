@@ -250,10 +250,6 @@ export class Events extends React.PureComponent<EventsProps, EventsState> {
   render() {
     return (
       <div>
-        <Divider clearing hidden />
-        <Header as="h1">FETCH: A little helper for your events</Header>
-        <Divider clearing hidden />
-
         {this.renderCreateEventInput()}
         {this.renderEvents()}
       </div>
@@ -338,7 +334,7 @@ export class Events extends React.PureComponent<EventsProps, EventsState> {
     return (
       <Grid.Row>
         <Loader indeterminate active inline="centered">
-          FETCHing events
+          <h4>FETCHing events</h4>
         </Loader>
       </Grid.Row>
     )
@@ -359,7 +355,8 @@ export class Events extends React.PureComponent<EventsProps, EventsState> {
             return (
 
               <Grid.Row key={event.eventId}>
-                  <Grid.Column width={3} verticalAlign="middle">
+                  <Grid.Column width={3} verticalAlign="middle" floated="right">
+
                     <div onClick={() => this.onLabelClick(event)} style={{cursor: 'pointer'}} >
                       <Image 
                         src={buttonUrl} 
@@ -367,19 +364,24 @@ export class Events extends React.PureComponent<EventsProps, EventsState> {
                         wrapped 
                       />
                     </div>
+
                   </Grid.Column>
                   <Grid.Column width={7} verticalAlign="middle">
+
                     <div onClick={() => this.onLabelClick(event)} style={{cursor: 'pointer'}} >
                       <h2>{event.name}</h2>
                       {event.description && (<h4> {event.description}</h4>)}
                     </div>
+
                   </Grid.Column>
                   <Grid.Column width={4} floated="right" verticalAlign="middle">
+
                     <div>Happening <ReactTimeAgo date={event.eventDate} /></div>
                     {this.renderOwnership(event)}
+
                   </Grid.Column>
-                  <Grid.Column width={2} floated="right" verticalAlign="middle">
-                    <Button.Group>
+                  <Grid.Column width={1} floated="left" verticalAlign="middle">
+
                       {event.owner && (
                           <Button
                             icon
@@ -392,7 +394,6 @@ export class Events extends React.PureComponent<EventsProps, EventsState> {
 
                       {this.renderDeleteEventButton(pos, event)}
 
-                    </Button.Group>
                   </Grid.Column>
               </Grid.Row>
 

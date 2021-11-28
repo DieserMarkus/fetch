@@ -1,0 +1,16 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "title": "updateEventRequest",
+    "type": "object",
+    "properties": {
+        "name": {
+            "type": "string",
+            "minLength": 3
+        },
+        "eventDate": {
+            "type": "string",
+            "minLength": 8
+        }
+    },
+    "additionalProperties": true
+}

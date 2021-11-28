@@ -1,0 +1,18 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "title": "updateItemRequest",
+    "type": "object",
+    "properties": {
+        "name": {
+            "type": "string"
+        },
+        "done": {
+            "type": "boolean"
+        }
+    },
+    "required": [
+        "name",
+        "done"
+    ],
+    "additionalProperties": true
+}

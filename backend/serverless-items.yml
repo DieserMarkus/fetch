@@ -1,0 +1,162 @@
+Auth:
+  handler: src/lambda/auth/auth0Authorizer.handler
+
+GetItems:
+  handler: src/lambda/http/getItems.handler
+  events:
+    - http:
+        method: get
+        path: events/{eventId}/items
+        cors: true
+        authorizer: Auth
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:Query
+      Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.ITEMS_TABLE}/index/${self:provider.environment.ITEMS_INDEX}
+    - Effect: Allow
+      Action:
+        - dynamodb:Query
+      Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.ITEMS_TABLE}
+    - Effect: Allow
+      Action:
+        - xray:GetSamplingRules
+        - xray:GetSamplingTargets
+        - xray:GetSamplingStatisticSummaries
+        - xray:BatchGetTraces
+        - xray:GetServiceGraph
+        - xray:GetTraceGraph
+        - xray:GetTraceSummaries
+        - xray:GetGroups
+        - xray:GetGroup
+        - xray:PutTraceSegments
+      Resource:
+        - "*"
+
+CreateItem:
+  handler: src/lambda/http/createItem.handler
+  events:
+    - http:
+        method: post
+        path: events/{eventId}/items
+        cors: true
+        authorizer: Auth
+        request:
+          schema:
+            application/json: ${file(src/models/createItemRequest.json)}
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:putItem
+      Resource:
+        - arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.ITEMS_TABLE}
+    - Effect: Allow
+      Action:
+        - xray:GetSamplingRules
+        - xray:GetSamplingTargets
+        - xray:GetSamplingStatisticSummaries
+        - xray:BatchGetTraces
+        - xray:GetServiceGraph
+        - xray:GetTraceGraph
+        - xray:GetTraceSummaries
+        - xray:GetGroups
+        - xray:GetGroup
+        - xray:PutTraceSegments
+      Resource:
+        - "*"
+
+UpdateItem:
+  handler: src/lambda/http/updateItem.handler
+  events:
+    - http:
+        method: patch
+        path: events/{eventId}/items/{itemId}
+        authorizer: Auth
+        cors: true
+        request:
+          schema:
+            application/json: ${file(src/models/updateItemRequest.json)}
+  iamRoleStatements:
+  - Effect: Allow
+    Action:
+      - dynamodb:UpdateItem
+    Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.ITEMS_TABLE}
+  - Effect: Allow
+    Action:
+      - xray:GetSamplingRules
+      - xray:GetSamplingTargets
+      - xray:GetSamplingStatisticSummaries
+      - xray:BatchGetTraces
+      - xray:GetServiceGraph
+      - xray:GetTraceGraph
+      - xray:GetTraceSummaries
+      - xray:GetGroups
+      - xray:GetGroup
+      - xray:PutTraceSegments
+    Resource:
+      - "*"
+
+DeleteItem:
+  handler: src/lambda/http/deleteItem.handler
+  events:
+    - http:
+        method: delete
+        path: events/{eventId}/items/{itemId}
+        cors: true
+        authorizer: Auth
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:Query
+      Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.ITEMS_TABLE}/index/${self:provider.environment.ITEMS_INDEX}
+    - Effect: Allow
+      Action:
+        - dynamodb:DeleteItem
+      Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.ITEMS_TABLE}
+    - Effect: Allow
+      Action:
+        - xray:GetSamplingRules
+        - xray:GetSamplingTargets
+        - xray:GetSamplingStatisticSummaries
+        - xray:BatchGetTraces
+        - xray:GetServiceGraph
+        - xray:GetTraceGraph
+        - xray:GetTraceSummaries
+        - xray:GetGroups
+        - xray:GetGroup
+        - xray:PutTraceSegments
+      Resource:
+        - "*"
+
+generateItemAttachmentUrl:
+  handler: src/lambda/http/generateItemAttachmentUrl.handler
+  events:
+    - http:
+        method: post
+        path: events/{eventId}/items/{itemId}/attachment
+        cors: true    
+        authorizer: Auth
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:UpdateItem
+      Resource: 
+        - arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.ITEMS_TABLE}
+    - Effect: Allow
+      Action:
+        - s3:PutObject
+      Resource: arn:aws:s3:::${self:provider.environment.ATTACHMENT_S3_BUCKET}/*
+    - Effect: Allow
+      Action:
+        - xray:GetSamplingRules
+        - xray:GetSamplingTargets
+        - xray:GetSamplingStatisticSummaries
+        - xray:BatchGetTraces
+        - xray:GetServiceGraph
+        - xray:GetTraceGraph
+        - xray:GetTraceSummaries
+        - xray:GetGroups
+        - xray:GetGroup
+        - xray:PutTraceSegments
+      Resource:
+        - "*"

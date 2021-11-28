@@ -43,7 +43,14 @@ export class Events extends React.PureComponent<EventsProps, EventsState> {
   addExistingEvent = async (eventId: string) => {
 
     if (!/^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/.test(this.state.eventCode)) {
+      this.setState({ eventCode: '', popupAddEventIsOpen: false })
       alert('Please enter a valid Event ID.')
+      return
+    }
+
+    if (this.state.events.some(e => e.eventId === this.state.eventCode)) {
+      this.setState({ eventCode: '', popupAddEventIsOpen: false })
+      alert('This event is already in your list.')
       return
     }
 

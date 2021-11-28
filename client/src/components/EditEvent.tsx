@@ -12,7 +12,7 @@ registerLocale('de', de)
 enum UploadState {
   NoUpload,
   FetchingPresignedUrl,
-  UploadingFile,
+  UploadingFile
 }
 
 interface EditEventProps {
@@ -31,6 +31,7 @@ interface EditEventProps {
 interface EditEventState {
   file: any
   uploadState: UploadState
+  saveState: boolean
   newEventName: string
   newEventDescription: string
   newEventDate: Date
@@ -43,6 +44,7 @@ export class EditEvent extends React.PureComponent<
   state: EditEventState = {
     file: undefined,
     uploadState: UploadState.NoUpload,
+    saveState: false,
     newEventName: this.props.location.state.event.eventName,
     newEventDescription: this.props.location.state.event.eventDescription,
     newEventDate: this.props.location.state.event.eventDate
@@ -74,6 +76,7 @@ export class EditEvent extends React.PureComponent<
   }
 
   handleSubmit = async (reactEvent: React.SyntheticEvent) => {
+    this.setState({ saveState: true })
     try {
       reactEvent.preventDefault()
       await patchEvent(this.props.auth.getIdToken(), this.props.location.state.event.eventId, {
@@ -84,6 +87,8 @@ export class EditEvent extends React.PureComponent<
       alert('Successfully saved.')
     } catch {
       alert('Could not save changes.')
+    } finally {
+      this.setState({ saveState: false })
     }
   }
 
@@ -230,7 +235,7 @@ export class EditEvent extends React.PureComponent<
   renderSaveButton() {
     return (
       <div>
-        <Button type="submit">
+        <Button loading={this.state.saveState} type="submit">
           Save changes
         </Button>
       </div>

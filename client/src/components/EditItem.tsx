@@ -6,7 +6,7 @@ import { getUploadUrl, patchItem, uploadFile } from '../api/items-api'
 enum UploadState {
   NoUpload,
   FetchingPresignedUrl,
-  UploadingFile,
+  UploadingFile
 }
 
 interface EditItemProps {
@@ -25,6 +25,7 @@ interface EditItemProps {
 interface EditItemState {
   file: any
   uploadState: UploadState
+  saveState: boolean
   newItemName: string
 }
 
@@ -35,6 +36,7 @@ export class EditItem extends React.PureComponent<
   state: EditItemState = {
     file: undefined,
     uploadState: UploadState.NoUpload,
+    saveState: false,
     newItemName: this.props.location.state.item.eventName
   }
 
@@ -45,14 +47,12 @@ export class EditItem extends React.PureComponent<
   handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files
     if (!files) return
-
-    this.setState({
-      file: files[0]
-    })
+    this.setState({ file: files[0] })
   }
 
   handleSubmit = async (reactEvent: React.SyntheticEvent) => {
     try {
+      this.setState({ saveState: true })
       reactEvent.preventDefault()
       await patchItem(this.props.auth.getIdToken(), this.props.location.state.item.itemId, this.props.location.state.event.eventId, {
         name: this.state.newItemName,
@@ -65,6 +65,8 @@ export class EditItem extends React.PureComponent<
       } else {
         alert('Could not save changes.')
       }
+    } finally {
+      this.setState({ saveState: false })
     }
   }
 
@@ -167,7 +169,7 @@ export class EditItem extends React.PureComponent<
   renderSaveButton() {
     return (
       <div>
-        <Button type="submit">
+        <Button loading={this.state.saveState} type="submit">
           Save changes
         </Button>
       </div>

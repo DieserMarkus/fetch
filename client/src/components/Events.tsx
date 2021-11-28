@@ -1,8 +1,8 @@
 import { History } from 'history'
 import React from "react"
-import { Button, Divider, Grid, Header, Icon, Input, Image, Loader, Confirm, Segment }  from 'semantic-ui-react'
+import { Button, Divider, Grid, Header, Icon, Input, Image, Loader, Confirm, Segment, Popup }  from 'semantic-ui-react'
 import ReactTimeAgo from 'react-time-ago'
-import { createEvent, deleteEvent, getEvents } from '../api/events-api'
+import { createEvent, deleteEvent, getEvents, addEvent } from '../api/events-api'
 import Auth from '../auth/Auth'
 import dummy from '../dummy.png'
 import { Event } from '../types/Event'
@@ -24,6 +24,8 @@ interface EventsState {
   newEventDescription: string
   loadingEvents: boolean
   confirmDeleteIsopen: boolean[]
+  popupAddEventIsOpen: boolean
+  eventCode: string
 }
 
 export class Events extends React.PureComponent<EventsProps, EventsState> {
@@ -33,7 +35,92 @@ export class Events extends React.PureComponent<EventsProps, EventsState> {
     newEventDate: new Date(),
     newEventDescription: '',
     loadingEvents: true,
-    confirmDeleteIsopen: [false]
+    confirmDeleteIsopen: [false],
+    popupAddEventIsOpen: false,
+    eventCode: ''
+  }
+
+  addExistingEvent = async (eventId: string) => {
+
+    if (!/^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/.test(this.state.eventCode)) {
+      alert('Please enter a valid Event ID.')
+      return
+    }
+
+    try {
+
+      await addEvent(this.props.auth.getIdToken(), this.state.eventCode)
+
+      this.setState({
+        events: await getEvents(this.props.auth.getIdToken()),
+        eventCode: '',
+        popupAddEventIsOpen: false
+      })
+
+    } catch(e: unknown) {
+      if (e instanceof Error) {
+        alert('Could not add the event.' + e.message)
+      } else {
+        alert('Could not add the event.')
+      }
+    }
+
+  }
+
+  handlePopupAddEventOpen = () => {
+    this.setState({ popupAddEventIsOpen: true })
+  }
+
+  handlePopupAddEventClose = () => {
+    this.setState({ popupAddEventIsOpen: false })
+  }
+
+  handleEventCodeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({ eventCode: event.target.value })
+  }
+
+  renderAddEventWithPopUp() {
+    return (
+      <Popup
+      trigger={<Button color="green" icon="add to calendar" />}
+      on='click'
+      open={this.state.popupAddEventIsOpen}
+      onClose={this.handlePopupAddEventClose}
+      onOpen={this.handlePopupAddEventOpen}
+      position='bottom right'
+    >
+      <Popup.Header>
+        <span>You received an event code?</span>
+      </Popup.Header>
+      <Popup.Content>
+        <p>Enter it here to add it to your list: </p>
+        <Input
+          style={{width: "100%"}}
+          type="string"
+          onChange={this.handleEventCodeChange}
+          defaultValue={this.state.eventCode}
+          placeholder="Event Code" 
+        />
+        <Divider clearing hidden />
+        <Button 
+          color="green" 
+          icon="plus square" 
+          style={{width: "100%"}} 
+          onClick={() => this.addExistingEvent(this.state.eventCode)} 
+        />
+      </Popup.Content>
+    </Popup>
+    )
+  }
+
+  addEventButton() {
+    if (this.props.auth.isAuthenticated()) {
+      return (
+        <div>
+          {this.renderAddEventWithPopUp()}
+        </div>
+      )
+    }
   }
 
   handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -189,7 +276,7 @@ export class Events extends React.PureComponent<EventsProps, EventsState> {
               />
             </Grid.Column>
 
-            <Grid.Column width={6}>
+            <Grid.Column width={5}>
               <Input
                 placeholder="Add a description"
                 onChange={this.handleDescriptionChange}
@@ -212,7 +299,9 @@ export class Events extends React.PureComponent<EventsProps, EventsState> {
                 />
               </div>
             </Grid.Column>
-
+            <Grid.Column width={1}>
+              {this.addEventButton()}
+            </Grid.Column>
           </Grid.Row>
         </Grid>
         

@@ -1,6 +1,6 @@
 import { History } from 'history'
 import React from "react"
-import { Button, Divider, Grid, Header, Icon, Input, Image, Loader, Confirm, Segment, Popup }  from 'semantic-ui-react'
+import { Button, Divider, Grid, Icon, Input, Image, Loader, Confirm, Segment, Popup }  from 'semantic-ui-react'
 import ReactTimeAgo from 'react-time-ago'
 import { createEvent, deleteEvent, getEvents, addEvent } from '../api/events-api'
 import Auth from '../auth/Auth'

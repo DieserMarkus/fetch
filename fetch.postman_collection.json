@@ -1,15 +1,551 @@
 {
 	"info": {
-		"_postman_id": "d0700d24-79ec-487e-8403-b565bef7f8e0",
+		"_postman_id": "4fd3fec4-72f6-46a4-90da-c792dfc93065",
 		"name": "SLS Fetch App",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
+			"name": "Events",
+			"item": [
+				{
+					"name": "Owner",
+					"item": [
+						{
+							"name": "Create event",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 201\", function () {\r",
+											"    pm.response.to.have.status(201);\r",
+											"});\r",
+											"pm.test(\"Event exists\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.event).to.exist;\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{authToken}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"name\": \"Festival Southside 2\",\n\t\"eventDate\": \"2023-06-17\",\n    \"description\": \"Optional description text\"\n}"
+								},
+								"url": {
+									"raw": "https://{{apiId}}.execute-api.eu-west-1.amazonaws.com/dev/events",
+									"protocol": "https",
+									"host": [
+										"{{apiId}}",
+										"execute-api",
+										"eu-west-1",
+										"amazonaws",
+										"com"
+									],
+									"path": [
+										"dev",
+										"events"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete event",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 202\", function () {\r",
+											"    pm.response.to.have.status(202);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "Bearer {{authToken}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "https://{{apiId}}.execute-api.eu-west-1.amazonaws.com/dev/events/0e182c6c-bf7c-4e9a-8e73-b7ca573c42d2",
+									"protocol": "https",
+									"host": [
+										"{{apiId}}",
+										"execute-api",
+										"eu-west-1",
+										"amazonaws",
+										"com"
+									],
+									"path": [
+										"dev",
+										"events",
+										"0e182c6c-bf7c-4e9a-8e73-b7ca573c42d2"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get attachment URL",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"pm.test(\"uploadUrl exists\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.uploadUrl).to.exist;\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{authToken}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "https://{{apiId}}.execute-api.eu-west-1.amazonaws.com/dev/events/07374af9-f1fd-4caf-9c5d-046ae763f222/attachment",
+									"protocol": "https",
+									"host": [
+										"{{apiId}}",
+										"execute-api",
+										"eu-west-1",
+										"amazonaws",
+										"com"
+									],
+									"path": [
+										"dev",
+										"events",
+										"07374af9-f1fd-4caf-9c5d-046ae763f222",
+										"attachment"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update event",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 202\", function () {\r",
+											"    pm.response.to.have.status(202);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "PATCH",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "Bearer {{authToken}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"name\": \"Festival Southside Day 1\",\n\t\"eventDate\": \"2022-06-17\",\n    \"description\": \"just a test\"\n}"
+								},
+								"url": {
+									"raw": "https://{{apiId}}.execute-api.eu-west-1.amazonaws.com/dev/events/07374af9-f1fd-4caf-9c5d-046ae763f222",
+									"protocol": "https",
+									"host": [
+										"{{apiId}}",
+										"execute-api",
+										"eu-west-1",
+										"amazonaws",
+										"com"
+									],
+									"path": [
+										"dev",
+										"events",
+										"07374af9-f1fd-4caf-9c5d-046ae763f222"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get all events for this user",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"pm.test(\"Events array exists\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.events).to.exist;\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{authToken}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "https://{{apiId}}.execute-api.eu-west-1.amazonaws.com/dev/events",
+									"protocol": "https",
+									"host": [
+										"{{apiId}}",
+										"execute-api",
+										"eu-west-1",
+										"amazonaws",
+										"com"
+									],
+									"path": [
+										"dev",
+										"events"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Reader",
+					"item": [
+						{
+							"name": "Add event to user list",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 201\", function () {\r",
+											"    pm.response.to.have.status(201);\r",
+											"});\r",
+											"pm.test(\"Event exists\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.event).to.exist;\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{authToken}}",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "https://{{apiId}}.execute-api.eu-west-1.amazonaws.com/dev/events/a8207531-ddc0-4ee8-a601-cf6ff9a523f8",
+									"protocol": "https",
+									"host": [
+										"{{apiId}}",
+										"execute-api",
+										"eu-west-1",
+										"amazonaws",
+										"com"
+									],
+									"path": [
+										"dev",
+										"events",
+										"a8207531-ddc0-4ee8-a601-cf6ff9a523f8"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete event from user list",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 202\", function () {\r",
+											"    pm.response.to.have.status(202);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"type": "text",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"type": "text",
+										"value": "Bearer {{authToken}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": ""
+								},
+								"url": {
+									"raw": "https://{{apiId}}.execute-api.eu-west-1.amazonaws.com/dev/events/07374af9-f1fd-4caf-9c5d-046ae763f222",
+									"protocol": "https",
+									"host": [
+										"{{apiId}}",
+										"execute-api",
+										"eu-west-1",
+										"amazonaws",
+										"com"
+									],
+									"path": [
+										"dev",
+										"events",
+										"07374af9-f1fd-4caf-9c5d-046ae763f222"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get all events for this user",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"pm.test(\"Events array exists\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.events).to.exist;\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{authToken}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "https://{{apiId}}.execute-api.eu-west-1.amazonaws.com/dev/events",
+									"protocol": "https",
+									"host": [
+										"{{apiId}}",
+										"execute-api",
+										"eu-west-1",
+										"amazonaws",
+										"com"
+									],
+									"path": [
+										"dev",
+										"events"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get all items for event",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Status code is 200\", function () {\r",
+											"    pm.response.to.have.status(200);\r",
+											"});\r",
+											"pm.test(\"Items array exists\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.items).to.exist;\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{authToken}}",
+										"type": "text"
+									}
+								],
+								"url": {
+									"raw": "https://{{apiId}}.execute-api.eu-west-1.amazonaws.com/dev/events/07374af9-f1fd-4caf-9c5d-046ae763f222/items",
+									"protocol": "https",
+									"host": [
+										"{{apiId}}",
+										"execute-api",
+										"eu-west-1",
+										"amazonaws",
+										"com"
+									],
+									"path": [
+										"dev",
+										"events",
+										"07374af9-f1fd-4caf-9c5d-046ae763f222",
+										"items"
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									""
+								]
+							}
+						}
+					]
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
 			"name": "Items",
 			"item": [
 				{
-					"name": "Get all items",
+					"name": "Get all items for event",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"Items array exists\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.items).to.exist;\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "GET",
 						"header": [
@@ -19,22 +555,20 @@
 								"type": "text"
 							}
 						],
-						"body": {
-							"mode": "raw",
-							"raw": ""
-						},
 						"url": {
-							"raw": "https://{{apiId}}.execute-api.eu-west-1.amazonaws.com/dev/items",
+							"raw": "https://{{apiId}}.execute-api.eu-west-1.amazonaws.com/dev/events/07374af9-f1fd-4caf-9c5d-046ae763f222/items",
 							"protocol": "https",
 							"host": [
 								"{{apiId}}",
 								"execute-api",
-								"us-east-1",
+								"eu-west-1",
 								"amazonaws",
 								"com"
 							],
 							"path": [
 								"dev",
+								"events",
+								"07374af9-f1fd-4caf-9c5d-046ae763f222",
 								"items"
 							]
 						}
@@ -43,6 +577,23 @@
 				},
 				{
 					"name": "Create item",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 201\", function () {\r",
+									"    pm.response.to.have.status(201);\r",
+									"});\r",
+									"pm.test(\"Item exists\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.item).to.exist;\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "POST",
 						"header": [
@@ -60,10 +611,10 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"name\": \"Sunscreen\",\n\t\"dueDate\": \"2022-06-11\"\n}"
+							"raw": "{\n\t\"name\": \"Hackbrötchen\"\n}"
 						},
 						"url": {
-							"raw": "https://{{apiId}}.execute-api.us-east-1.amazonaws.com/dev/items",
+							"raw": "https://{{apiId}}.execute-api.eu-west-1.amazonaws.com/dev/events/07374af9-f1fd-4caf-9c5d-046ae763f222/items",
 							"protocol": "https",
 							"host": [
 								"{{apiId}}",
@@ -74,6 +625,8 @@
 							],
 							"path": [
 								"dev",
+								"events",
+								"07374af9-f1fd-4caf-9c5d-046ae763f222",
 								"items"
 							]
 						}
@@ -82,8 +635,21 @@
 				},
 				{
 					"name": "Update item",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 202\", function () {\r",
+									"    pm.response.to.have.status(202);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
-						"method": "PUT",
+						"method": "PATCH",
 						"header": [
 							{
 								"key": "Content-Type",
@@ -99,10 +665,10 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"name\": \"Soccer Ball\",\n\t\"dueDate\": \"2021-12-11\",\n\t\"done\": true\n}"
+							"raw": "{\n\t\"name\": \"Soccer Ball\",\n\t\"done\": true\n}"
 						},
 						"url": {
-							"raw": "https://{{apiId}}.execute-api.eu-west-1.amazonaws.com/dev/items/35dd600f-43c2-4649-903c-615e1586a26f",
+							"raw": "https://{{apiId}}.execute-api.eu-west-1.amazonaws.com/dev/events/07374af9-f1fd-4caf-9c5d-046ae763f222/items/6e13386d-6fd8-4e27-9aa8-35c025573c07",
 							"protocol": "https",
 							"host": [
 								"{{apiId}}",
@@ -113,8 +679,10 @@
 							],
 							"path": [
 								"dev",
+								"events",
+								"07374af9-f1fd-4caf-9c5d-046ae763f222",
 								"items",
-								"35dd600f-43c2-4649-903c-615e1586a26f"
+								"6e13386d-6fd8-4e27-9aa8-35c025573c07"
 							]
 						}
 					},
@@ -122,6 +690,19 @@
 				},
 				{
 					"name": "Delete item",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 202\", function () {\r",
+									"    pm.response.to.have.status(202);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "DELETE",
 						"header": [
@@ -142,7 +723,7 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "https://{{apiId}}.execute-api.eu-west-1.amazonaws.com/dev/items/fe671583-4512-45f6-9475-4265c04362fb",
+							"raw": "https://{{apiId}}.execute-api.eu-west-1.amazonaws.com/dev/events/07374af9-f1fd-4caf-9c5d-046ae763f222/items/4e938961-68a9-4e2c-b740-bee693763909",
 							"protocol": "https",
 							"host": [
 								"{{apiId}}",
@@ -153,8 +734,10 @@
 							],
 							"path": [
 								"dev",
+								"events",
+								"07374af9-f1fd-4caf-9c5d-046ae763f222",
 								"items",
-								"fe671583-4512-45f6-9475-4265c04362fb"
+								"4e938961-68a9-4e2c-b740-bee693763909"
 							]
 						}
 					},
@@ -162,6 +745,23 @@
 				},
 				{
 					"name": "Get attachment URL",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									"pm.test(\"uploadUrl exists\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.uploadUrl).to.exist;\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "POST",
 						"header": [
@@ -176,7 +776,7 @@
 							"raw": ""
 						},
 						"url": {
-							"raw": "https://{{apiId}}.execute-api.eu-west-1.amazonaws.com/dev/items/3836b777-9bc4-4429-9b79-ba4e4f5f91c0/attachment",
+							"raw": "https://{{apiId}}.execute-api.eu-west-1.amazonaws.com/dev/events/07374af9-f1fd-4caf-9c5d-046ae763f222/items/288abf34-b8af-4f1e-a8f6-fd94275b4abf/attachment",
 							"protocol": "https",
 							"host": [
 								"{{apiId}}",
@@ -187,8 +787,10 @@
 							],
 							"path": [
 								"dev",
+								"events",
+								"07374af9-f1fd-4caf-9c5d-046ae763f222",
 								"items",
-								"3836b777-9bc4-4429-9b79-ba4e4f5f91c0",
+								"288abf34-b8af-4f1e-a8f6-fd94275b4abf",
 								"attachment"
 							]
 						}
@@ -200,7 +802,6 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"id": "ce2b42d4-8cc5-4f30-a6ed-e7f0f303c3fd",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -210,7 +811,6 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "efb16c49-3866-4241-97d1-360ad72736d8",
 						"type": "text/javascript",
 						"exec": [
 							""
@@ -220,11 +820,20 @@
 			]
 		}
 	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "* ADD TOKEN HERE *",
+				"type": "string"
+			}
+		]
+	},
 	"event": [
 		{
 			"listen": "prerequest",
 			"script": {
-				"id": "2e83c0fe-6650-44d5-a90f-4c27ff720d83",
 				"type": "text/javascript",
 				"exec": [
 					""
@@ -234,7 +843,6 @@
 		{
 			"listen": "test",
 			"script": {
-				"id": "977c227e-2df3-42eb-9a48-ec25e2f7eeae",
 				"type": "text/javascript",
 				"exec": [
 					""
@@ -244,16 +852,8 @@
 	],
 	"variable": [
 		{
-			"id": "bf208e6b-f66d-4008-9366-dd541ff65425",
 			"key": "apiId",
-			"value": "",
-			"type": "string"
-		},
-		{
-			"id": "9bc6399a-d2bb-4f2d-9ffa-8480370d383c",
-			"key": "authToken",
-			"value": "",
-			"type": "string"
+			"value": ""
 		}
 	]
 }

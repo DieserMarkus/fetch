@@ -8,4 +8,5 @@ export interface Item {
   done?: boolean
   attachmentUrl?: string
   modifiedDate: Date
+  modifiedBy?: string
 }

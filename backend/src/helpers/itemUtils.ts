@@ -48,17 +48,18 @@ export class ItemUtils{
         return result.Items as Item[]
     }
 
-    async updateItem(eventId: string, itemId: string, modifiedDate: string, updatedItem:UpdateItemRequest) {
+    async updateItem(eventId: string, itemId: string, modifiedDate: string, modifiedBy: string, updatedItem:UpdateItemRequest) {
         await this.dynamoDBClient.update({
             TableName: this.itemsTable,
             Key: {
                 'itemId' : itemId,
                 'eventId' : eventId
             },
-            UpdateExpression: 'set #namefield = :n, modifiedDate = :d, done = :done',
+            UpdateExpression: 'set #namefield = :name, modifiedDate = :date, modifiedBy = :by, done = :done',
             ExpressionAttributeValues: {
-                ':n' : updatedItem.name,
-                ':d' : modifiedDate,
+                ':name' : updatedItem.name,
+                ':date' : modifiedDate,
+                ':by' : modifiedBy,
                 ':done' : updatedItem.done
             },
             ExpressionAttributeNames:{

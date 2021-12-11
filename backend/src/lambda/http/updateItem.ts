@@ -3,6 +3,7 @@ import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda'
 import * as middy from 'middy'
 import { cors, httpErrorHandler } from 'middy/middlewares'
 import { createLogger } from '../../utils/logger'
+import { getUserName } from '../utils';
 import { ItemUtils } from '../../helpers/itemUtils'
 import { UpdateItemRequest } from '../../requests/UpdateItemRequest'
 
@@ -17,11 +18,12 @@ export const handler = middy(
 
     const eventId = event.pathParameters.eventId
     const itemId = event.pathParameters.itemId
+    const createdBy = getUserName(event)
     const updatedItem: UpdateItemRequest = JSON.parse(event.body)
 
     logger.info('Updating item', {eventId, itemId, modifiedDate})
 
-    await itemUtils.updateItem(eventId, itemId, modifiedDate.toString(), updatedItem)
+    await itemUtils.updateItem(eventId, itemId, modifiedDate.toString(), createdBy, updatedItem)
 
     return {
       statusCode: 202,

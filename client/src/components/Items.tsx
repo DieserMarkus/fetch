@@ -11,7 +11,8 @@ import {
   Icon,
   Input,
   Image,
-  Loader
+  Loader,
+  Container
 } from 'semantic-ui-react'
 import ReactTimeAgo from 'react-time-ago'
 import { createItem, deleteItem, getItems, patchItem } from '../api/items-api'
@@ -188,10 +189,20 @@ export class Items extends React.PureComponent<ItemsProps, ItemsState> {
     )
   }
 
+  renderCreated(item: Item) {
+    return (
+      <Container>
+        Added by {item.createdBy} <ReactTimeAgo date={item.createdDate} />
+      </Container>
+    )
+  }
+
   renderModified(item: Item) {
-    if (item.modifiedDate) {
+    if (item.modifiedDate && item.modifiedBy) {
       return (
-        <div>Modified <ReactTimeAgo date={item.modifiedDate} /></div>
+        <Container>
+          Modified by {item.modifiedBy} <ReactTimeAgo date={item.modifiedDate} />
+        </Container>
       )}
   }
 
@@ -210,21 +221,20 @@ export class Items extends React.PureComponent<ItemsProps, ItemsState> {
               <Grid.Column width={3} verticalAlign="middle">
                 <Image src={buttonUrl} size="tiny" wrapped />
               </Grid.Column>
-              <Grid.Column width={4} verticalAlign="middle">
+              <Grid.Column width={5} verticalAlign="middle">
                 <h3>{item.name}</h3>
               </Grid.Column>
-              <Grid.Column width={3} verticalAlign="middle">
+              <Grid.Column width={1} verticalAlign="middle">
                 <Checkbox
                   onChange={() => this.onItemCheck(pos, event.eventId)}
                   checked={item.done}
                 />
               </Grid.Column>
-              <Grid.Column width={3} floated="right" verticalAlign="middle">
-                {item.createdBy} <br />
-                Added <ReactTimeAgo date={item.createdDate} /><br />
+              <Grid.Column width={4} floated="right" verticalAlign="middle">
+                {this.renderCreated(item)} 
                 {this.renderModified(item)}
               </Grid.Column>
-              <Grid.Column width={1} floated="right" verticalAlign="middle">
+              <Grid.Column width={2} floated="right" verticalAlign="middle">
               <Button
                   icon
                   color="blue"

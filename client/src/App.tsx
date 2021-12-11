@@ -9,6 +9,7 @@ import { LogIn } from './components/LogIn'
 import { NotFound } from './components/NotFound'
 import { Items } from './components/Items'
 import { Event } from './types/Event'
+import { Item } from './types/Item'
 import { Events } from './components/Events'
 import Logo from './img/Logo.png'
 
@@ -48,6 +49,16 @@ export default class App extends Component<AppProps, AppState> {
       pathname: `/events/${event.eventId}/items`,
       state: { 
         event: event
+      }
+    })
+  }
+
+  redirectToItem(event: Event, item: Item) {
+    this.props.history.push({ 
+      pathname: `/events/${item.eventId}/items/${item.itemId}/edit`,
+      state: { 
+        event: event,
+        item: item
       }
     })
   }
@@ -127,16 +138,16 @@ export default class App extends Component<AppProps, AppState> {
 
   generateMenu() {
     const { event } = this.props.location.state as any || {event: { event: '' }}
+    const { item } = this.props.location.state as any || {item: { item: '' }}
+
     return (
       <Menu>
 
         <Menu.Item name='Home' onClick={this.redirectHome} />
 
-        {this.props.location.pathname.includes('events') && ( 
-        <Menu.Item name='Event' onClick={() => this.redirectToEvent(event)}>
-          {event.name}
-        </Menu.Item>
-        )}
+        {event && event.eventId && ( <Menu.Item onClick={() => this.redirectToEvent(event)}> {event.name} </Menu.Item> )}
+
+        {item && item.itemId && ( <Menu.Item onClick={() => this.redirectToItem(event, item)}>  {item.name} </Menu.Item>)}
 
         {this.props.location.pathname.endsWith('edit') && ( <Menu.Item name='Edit' /> )}
 

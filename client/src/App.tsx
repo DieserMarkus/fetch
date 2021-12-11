@@ -1,6 +1,6 @@
 import { Component } from 'react'
 import { Route, Router, Switch } from 'react-router-dom'
-import { Grid, Menu, Segment, Divider, Header } from 'semantic-ui-react'
+import { Grid, Menu, Segment, Divider, Image, Container, List, Icon } from 'semantic-ui-react'
 import Auth from './auth/Auth'
 import { Location, History } from 'history'
 import { EditItem } from './components/EditItem'
@@ -10,7 +10,8 @@ import { NotFound } from './components/NotFound'
 import { Items } from './components/Items'
 import { Event } from './types/Event'
 import { Events } from './components/Events'
-import { ReactComponent as Logo } from './logo.svg';
+import Logo from './img/Logo.png'
+import MiniLogo from './img/Logo.svg'
 
 export interface AppProps {
   auth: Auth
@@ -53,15 +54,30 @@ export default class App extends Component<AppProps, AppState> {
   }
 
   render() {
+
+    var style = {
+      textAlign: 'center',
+      padding: '20px',
+      position: 'fixed',
+      left: '0',
+      bottom: '0',
+      height: '60px',
+      width: '100%'
+    }
+    
     return (
       <div>
         
-        <Segment style={{ padding: '4em 0em' }} vertical>
+
           <Grid container stackable verticalAlign="middle">
           <Grid.Row fullWidth>
             <Divider clearing hidden />
-              <Logo height="100" onClick={this.redirectHome} style={{cursor: 'pointer'}} />
-              <Header as="h1">FETCH: A little helper for your events</Header>
+              <Image 
+                src={Logo} 
+                size='large' 
+                centered 
+                onClick={this.redirectHome} 
+                style={{cursor: 'pointer'}} />
             <Divider clearing hidden />
           </Grid.Row>
             <Grid.Row>
@@ -74,6 +90,39 @@ export default class App extends Component<AppProps, AppState> {
               </Grid.Column>
             </Grid.Row>
           </Grid>
+
+        <Segment inverted style={style}>
+          <Container textAlign='center'>
+            Made with &nbsp; <Icon name='heart' color='red' /> and &nbsp; <Icon name='coffee' color='brown' /> &nbsp; for Udacity Cloud Developer Nanodegree by &#102;&#101;&#116;&#099;&#104;[at]&#109;&#052;&#114;&#107;&#117;&#115;&#046;&#099;&#111;&#109;
+          </Container>
+          <Container textAlign='center'>
+            <List horizontal inverted divided link size='small'>
+              <List.Item as='a' href='https://auth0.com/'>
+                auth0
+              </List.Item>
+              <List.Item as='a' href='https://www.serverless.com/'>
+                serverless
+              </List.Item>
+              <List.Item as='a' href='https://github.com/DieserMarkus'>
+                github
+              </List.Item>
+              <List.Item as='a' href='https://reactjs.org/'>
+                reactjs
+              </List.Item>
+              <List.Item as='a' href='https://www.typescriptlang.org/'>
+                typescript
+              </List.Item>
+              <List.Item as='a' href='https://nodejs.org/en/'>
+                nodejs
+              </List.Item>
+              <List.Item as='a' href='https://aws.amazon.com/lambda/'>
+                aws lambda
+              </List.Item>
+              <List.Item as='a' href='https://aws.amazon.com/dynamodb'>
+                aws dynamodb
+              </List.Item>
+            </List>
+          </Container>
         </Segment>
 
       </div>
@@ -81,14 +130,14 @@ export default class App extends Component<AppProps, AppState> {
   }
 
   generateMenu() {
-    const { event } = this.props.location.state as any || {event: { event: "" }}
+    const { event } = this.props.location.state as any || {event: { event: '' }}
     return (
       <Menu>
 
-        <Menu.Item name="Home" onClick={this.redirectHome} />
+        <Menu.Item name='Home' onClick={this.redirectHome} />
 
-        {this.props.location.pathname.includes("events") && ( 
-        <Menu.Item name="Event" onClick={() => this.redirectToEvent(event)}>
+        {this.props.location.pathname.includes('events') && ( 
+        <Menu.Item name='Event' onClick={() => this.redirectToEvent(event)}>
           {event.name}
         </Menu.Item>
         )}

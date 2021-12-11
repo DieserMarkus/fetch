@@ -1,6 +1,6 @@
 import { Location, History } from 'history'
 import update from 'immutability-helper'
-import dummy from '../dummy.png'
+import dummy from '../img/Dummy.png'
 import * as React from 'react'
 import {
   Button,

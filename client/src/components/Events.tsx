@@ -4,7 +4,7 @@ import { Button, Divider, Grid, Icon, Input, Image, Loader, Confirm, Segment, Po
 import ReactTimeAgo from 'react-time-ago'
 import { createEvent, deleteEvent, getEvents, addEvent } from '../api/events-api'
 import Auth from '../auth/Auth'
-import dummy from '../dummy.png'
+import dummy from '../img/Dummy.png'
 import { Event } from '../types/Event'
 import DatePicker from "react-datepicker"
 import de from 'date-fns/locale/de'
@@ -313,7 +313,7 @@ export class Events extends React.PureComponent<EventsProps, EventsState> {
         return
       }
 
-      if (this.state.newEventName == '') {
+      if (this.state.newEventName === '') {
         this.setState({ popupCreateEventErrorLabelEventExists: false, popupCreateEventErrorLabelEventName: true }) 
         return
       }

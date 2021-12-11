@@ -11,7 +11,6 @@ import { Items } from './components/Items'
 import { Event } from './types/Event'
 import { Events } from './components/Events'
 import Logo from './img/Logo.png'
-import MiniLogo from './img/Logo.svg'
 
 export interface AppProps {
   auth: Auth
@@ -68,7 +67,7 @@ export default class App extends Component<AppProps, AppState> {
     return (
       <div>
         <Divider clearing hidden />
-        <Grid container stackable verticalAlign="middle">
+        <Grid container stackable verticalAlign='middle'>
           <Grid.Row fullWidth>
             <Image 
               src={Logo} 
@@ -139,9 +138,9 @@ export default class App extends Component<AppProps, AppState> {
         </Menu.Item>
         )}
 
-        {this.props.location.pathname.endsWith("edit") && ( <Menu.Item name="Edit" /> )}
+        {this.props.location.pathname.endsWith('edit') && ( <Menu.Item name='Edit' /> )}
 
-        <Menu.Menu position="right">
+        <Menu.Menu position='right'>
           {this.logInLogOutButton()}
         </Menu.Menu>
       </Menu>
@@ -151,13 +150,13 @@ export default class App extends Component<AppProps, AppState> {
   logInLogOutButton() {
     if (this.props.auth.isAuthenticated()) {
       return (
-        <Menu.Item name="logout" onClick={this.handleLogout}>
+        <Menu.Item name='logout' onClick={this.handleLogout}>
           Log Out
         </Menu.Item>
       )
     } else {
       return (
-        <Menu.Item name="login" onClick={this.handleLogin}>
+        <Menu.Item name='login' onClick={this.handleLogin}>
           Log In
         </Menu.Item>
       )
@@ -172,7 +171,7 @@ export default class App extends Component<AppProps, AppState> {
     return (
       <Switch>
         <Route
-          path="/"
+          path='/'
           exact
           render={props => {
             return <Events {...props} auth={this.props.auth} />
@@ -180,7 +179,7 @@ export default class App extends Component<AppProps, AppState> {
         />
 
         <Route
-          path="/events/:eventId/edit"
+          path='/events/:eventId/edit'
           exact
           render={props => {
             return <EditEvent {...props} auth={this.props.auth} />
@@ -188,7 +187,7 @@ export default class App extends Component<AppProps, AppState> {
         />
 
         <Route
-          path="/events/:eventId/items"
+          path='/events/:eventId/items'
           exact
           render={props => {
             return <Items {...props} auth={this.props.auth} />
@@ -196,7 +195,7 @@ export default class App extends Component<AppProps, AppState> {
         />
 
         <Route
-          path="/events/:eventId/items/:itemId/edit"
+          path='/events/:eventId/items/:itemId/edit'
           exact
           render={props => {
             return <EditItem {...props} auth={this.props.auth} />

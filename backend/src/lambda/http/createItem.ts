@@ -3,19 +3,19 @@ import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda'
 import * as middy from 'middy'
 import { cors, httpErrorHandler } from 'middy/middlewares'
 import { createLogger } from '../../utils/logger'
-import { getUserId, getUserName } from '../utils';
+import { getUserId, getUserName } from '../utils'
 import { ItemUtils } from '../../helpers/itemUtils'
 import { CreateItemRequest } from '../../requests/CreateItemRequest'
 
 const logger = createLogger('CreateItem')
-const itemUtils = new ItemUtils();
+const itemUtils = new ItemUtils()
 
 export const handler = middy(
   async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
 
     const createdDate = new Date()
     createdDate.setDate(createdDate.getUTCDate())
-
+    
     const userId = getUserId(event)
     const createdBy = getUserName(event)
     const eventId = event.pathParameters.eventId
@@ -40,7 +40,7 @@ export const handler = middy(
               ...newItem
             }
       })
-    };
+    }
   })
 
   handler

@@ -121,8 +121,8 @@ export class EditItem extends React.PureComponent<
           <Form.Field>
             <label>Name</label>
             <Input
-              style={{width: "100%"}}
-              type="string"
+              style={{width: '100%'}}
+              type='string'
               onChange={this.handleNameChange}
               defaultValue={this.props.location.state.item.name}
             />
@@ -142,9 +142,9 @@ export class EditItem extends React.PureComponent<
           <Form.Field>
             <label>File</label>
             <Input
-              type="file"
-              accept="image/*"
-              placeholder="Image to upload"
+              type='file'
+              accept='image/*'
+              placeholder='Image to upload'
               onChange={this.handleFileChange}
             />
           </Form.Field>
@@ -160,7 +160,7 @@ export class EditItem extends React.PureComponent<
       <div>
         {this.state.uploadState === UploadState.FetchingPresignedUrl && <p>Uploading image metadata</p>}
         {this.state.uploadState === UploadState.UploadingFile && <p>Uploading file</p>}
-        <Button loading={this.state.uploadState !== UploadState.NoUpload} type="submit">
+        <Button loading={this.state.uploadState !== UploadState.NoUpload} type='submit'>
           Upload
         </Button>
       </div>
@@ -170,7 +170,7 @@ export class EditItem extends React.PureComponent<
   renderSaveButton() {
     return (
       <div>
-        <Button loading={this.state.saveState} type="submit">
+        <Button loading={this.state.saveState} type='submit'>
           Save changes
         </Button>
       </div>

@@ -2,18 +2,7 @@ import { Location, History } from 'history'
 import update from 'immutability-helper'
 import dummy from '../img/Dummy.png'
 import * as React from 'react'
-import {
-  Button,
-  Checkbox,
-  Divider,
-  Grid,
-  Header,
-  Icon,
-  Input,
-  Image,
-  Loader,
-  Container
-} from 'semantic-ui-react'
+import { Button, Checkbox, Divider, Grid, Header, Icon, Input, Image, Loader, Container } from 'semantic-ui-react'
 import ReactTimeAgo from 'react-time-ago'
 import { createItem, deleteItem, getItems, patchItem } from '../api/items-api'
 import Auth from '../auth/Auth'
@@ -50,7 +39,7 @@ export class Items extends React.PureComponent<ItemsProps, ItemsState> {
         item: item,
         event: event
       }
-    });
+    })
   }
 
   onItemCreate = async () => {
@@ -61,7 +50,7 @@ export class Items extends React.PureComponent<ItemsProps, ItemsState> {
       loadingItems: true
     })
     try {
-      const { event } = this.props.location.state as any || {event: { event: "" }}
+      const { event } = this.props.location.state as any || {event: { event: '' }}
       const newItem = await createItem(this.props.auth.getIdToken(), event.eventId, {
         name: this.state.newItemName
       })
@@ -108,7 +97,7 @@ export class Items extends React.PureComponent<ItemsProps, ItemsState> {
 
   async componentDidMount() {
     try {
-      const { event } = this.props.location.state as any || {event: { event: "" }}
+      const { event } = this.props.location.state as any || {event: { event: '' }}
       const items = await getItems(this.props.auth.getIdToken(), event.eventId)
 
       this.setState({
@@ -125,10 +114,10 @@ export class Items extends React.PureComponent<ItemsProps, ItemsState> {
   }
 
   render() {
-    const { event } = this.props.location.state as any || {event: { event: "" }}
+    const { event } = this.props.location.state as any || {event: { event: '' }}
     return (
       <div>
-        <Header as="h1">{event.name} (<ReactTimeAgo date={event.eventDate} />)</Header>
+        <Header as='h1'>{event.name} (<ReactTimeAgo date={event.eventDate} />)</Header>
         Created <ReactTimeAgo date={event.createdDate} /> by {event.createdBy}
         <h4>{event.description}</h4>
         
@@ -158,8 +147,8 @@ export class Items extends React.PureComponent<ItemsProps, ItemsState> {
               onClick: this.onItemCreate
             }}
             fluid
-            actionPosition="left"
-            placeholder="Someone should bring this item..."
+            actionPosition='left'
+            placeholder='Someone should bring this item...'
             onChange={this.handleNameChange}
             onKeyDown={handleKeyDown}
           />
@@ -182,7 +171,7 @@ export class Items extends React.PureComponent<ItemsProps, ItemsState> {
   renderLoading() {
     return (
       <Grid.Row>
-        <Loader indeterminate active inline="centered">
+        <Loader indeterminate active inline='centered'>
         <h4>FETCHing items</h4>
         </Loader>
       </Grid.Row>
@@ -208,46 +197,47 @@ export class Items extends React.PureComponent<ItemsProps, ItemsState> {
 
   renderItemsList() {
     var buttonUrl
-    const { event } = this.props.location.state as any || {event: { event: "" }}
+    const { event } = this.props.location.state as any || {event: { event: '' }}
     return (
       <Grid padded>
-        {this.state.items.map((item, pos) => {
+
+        {this.state.items.sort(value => value.done ? 1 : -1 ).map((item, pos) => {
 
           if (item.attachmentUrl) { buttonUrl = item.attachmentUrl } 
           else { buttonUrl = dummy }
 
           return (
             <Grid.Row key={item.itemId}>
-              <Grid.Column width={3} verticalAlign="middle">
+              <Grid.Column width={3} verticalAlign='middle'>
                 <Image src={buttonUrl} size="tiny" wrapped />
               </Grid.Column>
-              <Grid.Column width={5} verticalAlign="middle">
+              <Grid.Column width={5} verticalAlign='middle'>
                 <h3>{item.name}</h3>
               </Grid.Column>
-              <Grid.Column width={1} verticalAlign="middle">
+              <Grid.Column width={1} verticalAlign='middle'>
                 <Checkbox
                   onChange={() => this.onItemCheck(pos, event.eventId)}
                   checked={item.done}
                 />
               </Grid.Column>
-              <Grid.Column width={4} floated="right" verticalAlign="middle">
+              <Grid.Column width={4} floated='right' verticalAlign='middle'>
                 {this.renderCreated(item)} 
                 {this.renderModified(item)}
               </Grid.Column>
-              <Grid.Column width={2} floated="right" verticalAlign="middle">
+              <Grid.Column width={2} floated='right' verticalAlign='middle'>
               <Button
                   icon
-                  color="blue"
+                  color='blue'
                   onClick={() => this.onEditButtonClick(item, event)}
                 >
-                  <Icon name="pencil" />
+                  <Icon name='pencil' />
                 </Button>
                 <Button
                   icon
-                  color="red"
+                  color='red'
                   onClick={() => this.onItemDelete(item.itemId, event.eventId)}
                 >
-                  <Icon name="delete" />
+                  <Icon name='delete' />
                 </Button>
               </Grid.Column>
               <Grid.Column width={16}>

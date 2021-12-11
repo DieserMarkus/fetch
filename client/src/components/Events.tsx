@@ -1,5 +1,5 @@
 import { History } from 'history'
-import React from "react"
+import React from 'react'
 import { Button, Divider, Grid, Icon, Input, Image, Loader, Confirm, Segment, Popup, Header, Label }  from 'semantic-ui-react'
 import ReactTimeAgo from 'react-time-ago'
 import { createEvent, deleteEvent, getEvents, addEvent } from '../api/events-api'
@@ -8,8 +8,8 @@ import dummy from '../img/Dummy.png'
 import { Event } from '../types/Event'
 import DatePicker from "react-datepicker"
 import de from 'date-fns/locale/de'
-import "react-datepicker/dist/react-datepicker.css"
-import { registerLocale } from  "react-datepicker"
+import 'react-datepicker/dist/react-datepicker.css'
+import { registerLocale } from 'react-datepicker'
 registerLocale('de', de)
 
 interface EventsProps {
@@ -128,7 +128,7 @@ export class Events extends React.PureComponent<EventsProps, EventsState> {
 
     return (
       <Popup
-      trigger={<Button color='red' content='Add an existing event' style={{width: "100%"}} />}
+      trigger={<Button color='red' content='Add an existing event' style={{width: '100%'}} />}
       on='click'
       open={this.state.popupAddEventIsOpen}
       onClose={this.handlePopupAddEventClose}
@@ -185,7 +185,7 @@ export class Events extends React.PureComponent<EventsProps, EventsState> {
 
     return (
       <Popup
-      trigger={<Button color='red' content='Create a new event' style={{width: "100%"}} />}
+      trigger={<Button color='red' content='Create a new event' style={{width: '100%'}} />}
       on='click'
       open={this.state.popupCreateEventIsOpen}
       onClose={this.handlePopupCreateEventClose}
@@ -293,7 +293,7 @@ export class Events extends React.PureComponent<EventsProps, EventsState> {
       state: { 
         event: event
       }
-    });
+    })
   }
 
   onLabelClick = (event: Event) => {
@@ -302,7 +302,7 @@ export class Events extends React.PureComponent<EventsProps, EventsState> {
       state: { 
         event: event
       }
-    });
+    })
   }
 
   createEvent = async () => {
@@ -378,7 +378,7 @@ export class Events extends React.PureComponent<EventsProps, EventsState> {
     if (event.owner) {
       return (
         <div>
-          <Button icon="trash alternate" color="red" onClick={() => this.showDeleteConfirmation(pos)} />
+          <Button icon='trash alternate' color='red' onClick={() => this.showDeleteConfirmation(pos)} />
           <Confirm
             open={this.state.confirmDeleteIsopen[pos]}
             onCancel={() => this.handleCancel(pos)}
@@ -391,7 +391,7 @@ export class Events extends React.PureComponent<EventsProps, EventsState> {
         </div>
     )} else {
       return (
-        <Button color="red" icon="trash alternate" onClick={() => this.onEventDelete(event)} />
+        <Button color='red' icon='trash alternate' onClick={() => this.onEventDelete(event)} />
       )
     }
   }
@@ -474,7 +474,7 @@ export class Events extends React.PureComponent<EventsProps, EventsState> {
   renderLoading() {
     return (
       <Grid.Row>
-        <Loader indeterminate active inline="centered">
+        <Loader indeterminate active inline='centered'>
           <h4>FETCHing events</h4>
         </Loader>
       </Grid.Row>
@@ -490,57 +490,57 @@ export class Events extends React.PureComponent<EventsProps, EventsState> {
         </Grid.Row>
         {this.state.events.sort((a, b) => new Date(b.eventDate).valueOf() - new Date(a.eventDate).valueOf()).reverse().map((event, pos) => {
           
-            if (event.attachmentUrl) { buttonUrl = event.attachmentUrl } 
-            else { buttonUrl = dummy }
+          if (event.attachmentUrl) { buttonUrl = event.attachmentUrl } 
+          else { buttonUrl = dummy }
 
-            return (
+          return (
 
-              <Grid.Row key={event.eventId}>
-                  <Grid.Column width={3} verticalAlign="middle" floated="right">
+            <Grid.Row key={event.eventId}>
 
-                    <div onClick={() => this.onLabelClick(event)} style={{cursor: 'pointer'}} >
-                      <Image 
-                        src={buttonUrl} 
-                        size="small" 
-                        wrapped 
-                      />
-                    </div>
+              <Grid.Column width={3} verticalAlign='middle' floated='right'>
 
-                  </Grid.Column>
-                  <Grid.Column width={7} verticalAlign="middle">
+                <div onClick={() => this.onLabelClick(event)} style={{cursor: 'pointer'}} >
+                  <Image 
+                    src={buttonUrl} 
+                    size='small'
+                    wrapped 
+                  />
+                </div>
 
-                    <div onClick={() => this.onLabelClick(event)} style={{cursor: 'pointer'}} >
-                      <h2>{event.name}</h2>
-                      {event.description && (<h4> {event.description}</h4>)}
-                    </div>
+              </Grid.Column>
+              <Grid.Column width={7} verticalAlign='middle'>
 
-                  </Grid.Column>
-                  <Grid.Column width={4} floated="right" verticalAlign="middle">
+                <div onClick={() => this.onLabelClick(event)} style={{cursor: 'pointer'}} >
+                  <h2>{event.name}</h2>
+                  {event.description && (<h4> {event.description}</h4>)}
+                </div>
 
-                    <div>Happening <ReactTimeAgo date={event.eventDate} /></div>
-                    {this.renderOwnership(event)}
+              </Grid.Column>
+              <Grid.Column width={4} floated='right' verticalAlign='middle'>
 
-                  </Grid.Column>
-                  <Grid.Column width={1} floated="left" verticalAlign="middle">
+                <div>Happening <ReactTimeAgo date={event.eventDate} /></div>
+                {this.renderOwnership(event)}
 
-                      {event.owner && (
-                          <Button
-                            icon
-                            color="blue"
-                            onClick={() => this.onEditButtonClick(event)}
-                          >
-                            <Icon name="pencil" />
-                          </Button>
-                      )}
+              </Grid.Column>
+              <Grid.Column width={1} floated='left' verticalAlign='middle'>
 
-                      {this.renderDeleteEventButton(pos, event)}
+                {event.owner && (
+                    <Button
+                      icon
+                      color='blue'
+                      onClick={() => this.onEditButtonClick(event)}
+                    >
+                      <Icon name='pencil' />
+                    </Button>
+                )}
 
-                  </Grid.Column>
-              </Grid.Row>
+                {this.renderDeleteEventButton(pos, event)}
 
-            )
+              </Grid.Column>
+
+            </Grid.Row>
+          )
         }
-
       )}
       </Grid>
     )

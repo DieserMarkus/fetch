@@ -211,7 +211,7 @@ export class EditEvent extends React.PureComponent<
             onClick: () => this.handleCopy()
           }}
           labelPosition='left'
-          style={{width: "100%"}}
+          style={{width: '100%'}}
           readOnly 
           value={this.props.match.params.eventId}
         />
@@ -225,7 +225,7 @@ export class EditEvent extends React.PureComponent<
       <div>
         {this.state.uploadState === UploadState.FetchingPresignedUrl && <p>Uploading image metadata</p>}
         {this.state.uploadState === UploadState.UploadingFile && <p>Uploading file</p>}
-        <Button loading={this.state.uploadState !== UploadState.NoUpload} type="submit">
+        <Button loading={this.state.uploadState !== UploadState.NoUpload} type='submit'>
           Upload
         </Button>
       </div>
@@ -235,7 +235,7 @@ export class EditEvent extends React.PureComponent<
   renderSaveButton() {
     return (
       <div>
-        <Button loading={this.state.saveState} type="submit">
+        <Button loading={this.state.saveState} type='submit'>
           Save changes
         </Button>
       </div>

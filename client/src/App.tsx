@@ -60,7 +60,7 @@ export default class App extends Component<AppProps, AppState> {
           <Grid container stackable verticalAlign="middle">
           <Grid.Row fullWidth>
             <Divider clearing hidden />
-              <Logo height="100" />
+              <Logo height="100" onClick={this.redirectHome} style={{cursor: 'pointer'}} />
               <Header as="h1">FETCH: A little helper for your events</Header>
             <Divider clearing hidden />
           </Grid.Row>

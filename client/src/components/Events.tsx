@@ -1,6 +1,6 @@
 import { History } from 'history'
 import React from "react"
-import { Button, Divider, Grid, Icon, Input, Image, Loader, Confirm, Segment, Popup }  from 'semantic-ui-react'
+import { Button, Divider, Grid, Icon, Input, Image, Loader, Confirm, Segment, Popup, Header, Label }  from 'semantic-ui-react'
 import ReactTimeAgo from 'react-time-ago'
 import { createEvent, deleteEvent, getEvents, addEvent } from '../api/events-api'
 import Auth from '../auth/Auth'
@@ -19,59 +19,76 @@ interface EventsProps {
 
 interface EventsState {
   events: Event[]
+  loadingEvents: boolean
+  // Popup to create a new event
+  popupCreateEventIsOpen: boolean
+  popupCreateEventErrorLabelEventName: boolean
+  popupCreateEventErrorLabelEventExists: boolean
   newEventName: string
   newEventDate: Date
   newEventDescription: string
-  loadingEvents: boolean
-  confirmDeleteIsopen: boolean[]
+  // Popup to add an existing event
   popupAddEventIsOpen: boolean
+  popupAddEventErrorLabelEventIdInvalid: boolean
+  popupAddEventErrorLabelEventExists: boolean
   eventCode: string
+  // Delete confirmation
+  confirmDeleteIsopen: boolean[]
 }
 
 export class Events extends React.PureComponent<EventsProps, EventsState> {
   state: EventsState = {
     events: [],
+    loadingEvents: true,
+    popupCreateEventIsOpen: false,
+    popupCreateEventErrorLabelEventName: false,
+    popupCreateEventErrorLabelEventExists: false,
     newEventName: '',
     newEventDate: new Date(),
     newEventDescription: '',
-    loadingEvents: true,
-    confirmDeleteIsopen: [false],
     popupAddEventIsOpen: false,
-    eventCode: ''
+    popupAddEventErrorLabelEventIdInvalid: false,
+    popupAddEventErrorLabelEventExists: false,
+    eventCode: '',
+    confirmDeleteIsopen: [false]
   }
 
-  addExistingEvent = async (eventId: string) => {
+  addExistingEvent = async () => {
 
     if (!/^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$/.test(this.state.eventCode)) {
-      this.setState({ eventCode: '', popupAddEventIsOpen: false })
-      alert('Please enter a valid Event ID.')
+      this.setState({ popupAddEventErrorLabelEventIdInvalid: true }) 
       return
     }
 
     if (this.state.events.some(e => e.eventId === this.state.eventCode)) {
-      this.setState({ eventCode: '', popupAddEventIsOpen: false })
-      alert('This event is already in your list.')
+      this.setState({ popupAddEventErrorLabelEventExists: true }) 
       return
     }
 
     try {
-
+      this.setState({
+        loadingEvents: true,
+        popupAddEventIsOpen: false
+      })
       await addEvent(this.props.auth.getIdToken(), this.state.eventCode)
 
       this.setState({
         events: await getEvents(this.props.auth.getIdToken()),
-        eventCode: '',
-        popupAddEventIsOpen: false
-      })
+        eventCode: ''
+      }) 
 
     } catch(e: unknown) {
       if (e instanceof Error) {
-        alert('Could not add the event.' + e.message)
+        console.log('Could not add the event.' + e.message)
       } else {
-        alert('Could not add the event.')
+        console.log('Could not add the event.')
       }
     }
-
+    this.setState({
+      loadingEvents: false,
+      popupAddEventErrorLabelEventExists: false,
+      popupAddEventErrorLabelEventIdInvalid: false
+    })
   }
 
   handlePopupAddEventOpen = () => {
@@ -79,7 +96,23 @@ export class Events extends React.PureComponent<EventsProps, EventsState> {
   }
 
   handlePopupAddEventClose = () => {
-    this.setState({ popupAddEventIsOpen: false })
+    this.setState({ 
+      popupAddEventIsOpen: false,
+      popupAddEventErrorLabelEventExists: false, 
+      popupAddEventErrorLabelEventIdInvalid: false 
+    })
+  }
+
+  handlePopupCreateEventOpen = () => {
+    this.setState({ popupCreateEventIsOpen: true })
+  }
+
+  handlePopupCreateEventClose = () => {
+    this.setState({ 
+      popupCreateEventIsOpen: false,
+      popupCreateEventErrorLabelEventExists: false, 
+      popupCreateEventErrorLabelEventName: false 
+    })
   }
 
   handleEventCodeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -87,34 +120,136 @@ export class Events extends React.PureComponent<EventsProps, EventsState> {
   }
 
   renderAddEventWithPopUp() {
+    const handleKeyDown = (event: { key: string }) => {
+      if (event.key === 'Enter') {
+        this.addExistingEvent()
+      }
+    }
+
     return (
       <Popup
-      trigger={<Button color="green" icon="add to calendar" />}
+      trigger={<Button color='red' content='Add an existing event' style={{width: "100%"}} />}
       on='click'
       open={this.state.popupAddEventIsOpen}
       onClose={this.handlePopupAddEventClose}
       onOpen={this.handlePopupAddEventOpen}
-      position='bottom right'
+      onKeyDown={handleKeyDown}
+      position='bottom center'
+      size='large'
+      style={{padding: '2em'}}
     >
       <Popup.Header>
         <span>You received an event code?</span>
       </Popup.Header>
       <Popup.Content>
-        <p>Enter it here to add it to your list: </p>
-        <Input
-          style={{width: "100%"}}
-          type="string"
+        <p></p>
+        <Input primary
+          action={{
+            color: 'red',
+            icon: 'share',
+            onClick: this.addExistingEvent
+          }}
+          actionPosition='left'
+          placeholder='Event Code'
+          style={{width: '100%'}}
           onChange={this.handleEventCodeChange}
-          defaultValue={this.state.eventCode}
-          placeholder="Event Code" 
         />
+
+        { this.state.popupAddEventErrorLabelEventExists 
+          ? 
+          <Label basic color='red' pointing>
+            This event is already in your list.
+          </Label>
+          : null
+        }
+
+        { this.state.popupAddEventErrorLabelEventIdInvalid 
+          ? 
+          <Label basic color='red' pointing>
+            Please enter a valid event ID.
+          </Label>
+          : null
+        }
+
+      </Popup.Content>
+    </Popup>
+    )
+  }
+
+  renderCreateEventWithPopUp() {
+    const handleKeyDown = (event: { key: string }) => {
+      if (event.key === 'Enter') {
+        this.createEvent()
+      }
+    }
+
+    return (
+      <Popup
+      trigger={<Button color='red' content='Create a new event' style={{width: "100%"}} />}
+      on='click'
+      open={this.state.popupCreateEventIsOpen}
+      onClose={this.handlePopupCreateEventClose}
+      onOpen={this.handlePopupCreateEventOpen}
+      onKeyDown={handleKeyDown}
+      position='bottom center'
+      size='large'
+      style={{padding: '2em'}}
+    >
+      <Popup.Header>
+        <span>Add some information</span>
+      </Popup.Header>
+      <Popup.Content>
+        <p></p>
+        <Input primary
+          action={{
+            color: 'red',
+            icon: 'add',
+            onClick: this.createEvent
+          }}
+          actionPosition='left'
+          placeholder='Event name'
+          style={{width: '100%'}}
+          onChange={this.handleNameChange}
+        />
+
+        { this.state.popupCreateEventErrorLabelEventExists 
+          ? 
+          <Label basic color='red' pointing>
+            This event is already in your list.
+          </Label>
+          : null
+        }
+
+        { this.state.popupCreateEventErrorLabelEventName 
+          ? 
+          <Label basic color='red' pointing>
+            Please enter an event name.
+          </Label>
+          : null
+        }
+
         <Divider clearing hidden />
-        <Button 
-          color="green" 
-          icon="plus square" 
-          style={{width: "100%"}} 
-          onClick={() => this.addExistingEvent(this.state.eventCode)} 
+
+        <DatePicker 
+          minDate={new Date()}
+          selected={this.state.newEventDate}
+          onChange={this.handleDateChange}
+          locale='de'
+          showTimeSelect
+          timeFormat='p'
+          timeIntervals={15}
+          dateFormat='Pp'
+          placeholderText='Pick a Date'
         />
+
+        <Divider clearing hidden />
+
+        <Input
+          placeholder='Optional description'
+          onChange={this.handleDescriptionChange}
+          style={{width: '100%'}}
+        />
+
       </Popup.Content>
     </Popup>
     )
@@ -125,6 +260,16 @@ export class Events extends React.PureComponent<EventsProps, EventsState> {
       return (
         <div>
           {this.renderAddEventWithPopUp()}
+        </div>
+      )
+    }
+  }
+
+  createEventButton() {
+    if (this.props.auth.isAuthenticated()) {
+      return (
+        <div>
+          {this.renderCreateEventWithPopUp()}
         </div>
       )
     }
@@ -160,8 +305,23 @@ export class Events extends React.PureComponent<EventsProps, EventsState> {
     });
   }
 
-  onEventCreate = async (event: React.ChangeEvent<HTMLButtonElement>) => {
+  createEvent = async () => {
     try {
+      if (this.state.events.some(e => e.name === this.state.newEventName)) {
+        this.setState({ popupCreateEventErrorLabelEventExists: true, popupCreateEventErrorLabelEventName: false })
+        this.setState({  }) 
+        return
+      }
+
+      if (this.state.newEventName == '') {
+        this.setState({ popupCreateEventErrorLabelEventExists: false, popupCreateEventErrorLabelEventName: true }) 
+        return
+      }
+
+      this.setState({
+        loadingEvents: true,
+        popupCreateEventIsOpen: false
+      })
       await createEvent(this.props.auth.getIdToken(), {
         name: this.state.newEventName,
         eventDate: this.state.newEventDate,
@@ -170,12 +330,17 @@ export class Events extends React.PureComponent<EventsProps, EventsState> {
       this.setState({
         events: await getEvents(this.props.auth.getIdToken()),
         newEventName: '',
-        newEventDescription: ''
+        newEventDescription: '',
       })
     } catch {
-      alert('Could not create the event.')
-    }
-  }
+      console.log('Could not create the event.')
+    } 
+    this.setState({
+      loadingEvents: false,
+      popupCreateEventErrorLabelEventExists: false, 
+      popupCreateEventErrorLabelEventName: true
+    })
+  } 
 
   onEventDelete = async (event: Event) => {
     try {
@@ -188,7 +353,7 @@ export class Events extends React.PureComponent<EventsProps, EventsState> {
     }
   }
 
-  show = (pos: number) => {
+  showDeleteConfirmation = (pos: number) => {
     let confirmDeleteIsopen = [...this.state.confirmDeleteIsopen]
     let item = confirmDeleteIsopen[pos]
     item = !item
@@ -213,7 +378,7 @@ export class Events extends React.PureComponent<EventsProps, EventsState> {
     if (event.owner) {
       return (
         <div>
-          <Button icon="trash alternate" color="red" onClick={() => this.show(pos)} />
+          <Button icon="trash alternate" color="red" onClick={() => this.showDeleteConfirmation(pos)} />
           <Confirm
             open={this.state.confirmDeleteIsopen[pos]}
             onCancel={() => this.handleCancel(pos)}
@@ -258,56 +423,32 @@ export class Events extends React.PureComponent<EventsProps, EventsState> {
 
   renderCreateEventInput() {
     return (
-      <Segment padded>
 
-        <Grid padded>
-          <Grid.Row>
+      <Segment placeholder>
+        
+        <Grid columns={2} stackable textAlign='center'>
 
-            <Grid.Column width={5}>
-              <Input
-                action={{
-                  color: 'teal',
-                  labelPosition: 'left',
-                  icon: 'add',
-                  content: 'Add Event',
-                  onClick: this.onEventCreate
-                }}
-                actionPosition="left"
-                placeholder="Lets go to..."
-                style={{width: "100%"}}
-                onChange={this.handleNameChange}
-              />
+          <Divider vertical>Or</Divider>
+
+          <Grid.Row verticalAlign='middle'>
+            <Grid.Column>
+              <Header icon>
+                <Icon name='plus' />
+              </Header>
+              {this.createEventButton()}
+              
             </Grid.Column>
 
-            <Grid.Column width={5}>
-              <Input
-                placeholder="Add a description"
-                onChange={this.handleDescriptionChange}
-                style={{width: "100%"}}
-              />
-            </Grid.Column>
-
-            <Grid.Column width={5}>
-              <div className="customDatePickerWidth">
-                <DatePicker 
-                  minDate={new Date()}
-                  selected={this.state.newEventDate}
-                  onChange={this.handleDateChange}
-                  locale="de"
-                  showTimeSelect
-                  timeFormat="p"
-                  timeIntervals={15}
-                  dateFormat="Pp"
-                  placeholderText="Pick a Date"
-                />
-              </div>
-            </Grid.Column>
-            <Grid.Column width={1}>
+            <Grid.Column>
+              <Header icon>
+                <Icon name='share' />
+              </Header>
               {this.addEventButton()}
             </Grid.Column>
           </Grid.Row>
+          
         </Grid>
-        
+
       </Segment>
     )
   }

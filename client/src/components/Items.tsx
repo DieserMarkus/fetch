@@ -52,7 +52,13 @@ export class Items extends React.PureComponent<ItemsProps, ItemsState> {
     });
   }
 
-  onItemCreate = async (event: React.ChangeEvent<HTMLButtonElement>) => {
+  onItemCreate = async () => {
+    if (this.state.newItemName === '') {
+      return
+    }
+    this.setState({
+      loadingItems: true
+    })
     try {
       const { event } = this.props.location.state as any || {event: { event: "" }}
       const newItem = await createItem(this.props.auth.getIdToken(), event.eventId, {
@@ -65,6 +71,10 @@ export class Items extends React.PureComponent<ItemsProps, ItemsState> {
     } catch {
       alert('Could not create the item.')
     }
+    this.setState({
+      loadingItems: false,
+      newItemName: ''
+    })
   }
 
   onItemDelete = async (itemId: string, eventId: string) => {
@@ -129,6 +139,12 @@ export class Items extends React.PureComponent<ItemsProps, ItemsState> {
   }
 
   renderCreateItemInput() {
+    const handleKeyDown = (event: { key: string }) => {
+      if (event.key === 'Enter') {
+        this.onItemCreate()
+      }
+    }
+
     return (
       <Grid.Row>
         <Grid.Column width={16}>
@@ -144,6 +160,7 @@ export class Items extends React.PureComponent<ItemsProps, ItemsState> {
             actionPosition="left"
             placeholder="Someone should bring this item..."
             onChange={this.handleNameChange}
+            onKeyDown={handleKeyDown}
           />
         </Grid.Column>
         <Grid.Column width={16}>

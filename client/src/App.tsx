@@ -79,7 +79,7 @@ export default class App extends Component<AppProps, AppState> {
       <div>
         <Divider clearing hidden />
         <Grid container stackable verticalAlign='middle'>
-          <Grid.Row fullWidth>
+          <Grid.Row>
             <Image 
               src={Logo} 
               size='large' 
@@ -88,7 +88,7 @@ export default class App extends Component<AppProps, AppState> {
               style={{cursor: 'pointer'}} />
           </Grid.Row>
           <Grid.Row>
-            <Grid.Column fullWidth>
+            <Grid.Column>
               <Router history={this.props.history}>
                 {this.generateMenu()}
                 

@@ -143,7 +143,7 @@ export class Events extends React.PureComponent<EventsProps, EventsState> {
       </Popup.Header>
       <Popup.Content>
         <p></p>
-        <Input primary
+        <Input primary='true'
           action={{
             color: 'red',
             icon: 'share',
@@ -200,7 +200,7 @@ export class Events extends React.PureComponent<EventsProps, EventsState> {
       </Popup.Header>
       <Popup.Content>
         <p></p>
-        <Input primary
+        <Input primary='true'
           action={{
             color: 'red',
             icon: 'add',

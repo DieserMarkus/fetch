@@ -67,29 +67,26 @@ export default class App extends Component<AppProps, AppState> {
     
     return (
       <div>
-        
-
-          <Grid container stackable verticalAlign="middle">
+        <Divider clearing hidden />
+        <Grid container stackable verticalAlign="middle">
           <Grid.Row fullWidth>
-            <Divider clearing hidden />
-              <Image 
-                src={Logo} 
-                size='large' 
-                centered 
-                onClick={this.redirectHome} 
-                style={{cursor: 'pointer'}} />
-            <Divider clearing hidden />
+            <Image 
+              src={Logo} 
+              size='large' 
+              centered 
+              onClick={this.redirectHome} 
+              style={{cursor: 'pointer'}} />
           </Grid.Row>
-            <Grid.Row>
-              <Grid.Column width={16}>
-                <Router history={this.props.history}>
-                  {this.generateMenu()}
-                  <Divider clearing hidden />
-                  {this.generateCurrentPage()}
-                </Router>
-              </Grid.Column>
-            </Grid.Row>
-          </Grid>
+          <Grid.Row>
+            <Grid.Column fullWidth>
+              <Router history={this.props.history}>
+                {this.generateMenu()}
+                
+                {this.generateCurrentPage()}
+              </Router>
+            </Grid.Column>
+          </Grid.Row>
+         </Grid>
 
         <Segment inverted style={style}>
           <Container textAlign='center'>

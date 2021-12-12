@@ -510,7 +510,7 @@ export class Events extends React.PureComponent<EventsProps, EventsState> {
                 </div>
 
               </Grid.Column>
-              <Grid.Column width={7} verticalAlign='middle'>
+              <Grid.Column width={6} verticalAlign='middle'>
 
                 <div onClick={() => this.onLabelClick(event)} style={{cursor: 'pointer'}} >
                   <h2>{event.name}</h2>
@@ -518,7 +518,7 @@ export class Events extends React.PureComponent<EventsProps, EventsState> {
                 </div>
 
               </Grid.Column>
-              <Grid.Column width={4} floated='right' verticalAlign='middle'>
+              <Grid.Column width={6} floated='right' verticalAlign='middle'>
 
                 <div>Happening <ReactTimeAgo date={event.eventDate} /></div>
                 {this.renderOwnership(event)}

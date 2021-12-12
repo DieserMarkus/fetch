@@ -68,6 +68,7 @@ export class Items extends React.PureComponent<ItemsProps, ItemsState> {
   }
 
   onItemDelete = async (itemId: string, eventId: string) => {
+    this.setState({ loadingItems: true })
     try {
       await deleteItem(this.props.auth.getIdToken(), itemId, eventId)
       this.setState({
@@ -76,6 +77,7 @@ export class Items extends React.PureComponent<ItemsProps, ItemsState> {
     } catch {
       alert('Could not delete the item.')
     }
+    this.setState({ loadingItems: false })
   }
 
   onItemCheck = async (pos: number, eventId: string) => {

@@ -343,6 +343,7 @@ export class Events extends React.PureComponent<EventsProps, EventsState> {
   } 
 
   onEventDelete = async (event: Event) => {
+    this.setState({ loadingEvents: true })
     try {
       await deleteEvent(this.props.auth.getIdToken(), event.eventId)
         this.setState({
@@ -351,6 +352,7 @@ export class Events extends React.PureComponent<EventsProps, EventsState> {
     } catch {
       alert('Could not delete the event.')
     }
+    this.setState({ loadingEvents: false })
   }
 
   showDeleteConfirmation = (pos: number) => {

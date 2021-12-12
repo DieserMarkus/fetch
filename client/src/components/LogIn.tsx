@@ -20,7 +20,6 @@ export class LogIn extends React.PureComponent<LogInProps, LogInState> {
     return (
       <Container textAlign='center'>
 
-
           <Segment placeholder>
             <Grid columns={2} stackable>
 

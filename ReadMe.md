@@ -24,6 +24,7 @@ This is a [_Udacity Cloud Developer Nanodegree_](https://www.udacity.com/course/
 - [serverless](https://www.serverless.com/)
 - [aws lambda](https://aws.amazon.com/lambda/)
 - [aws dynamodb](https://aws.amazon.com/dynamodb)
+- [aws lightsail](https://aws.amazon.com/lightsail/)
 - [reactjs](https://reactjs.org/)
 - [nodejs](https://nodejs.org/en/)
 - [typescript](https://www.typescriptlang.org/)

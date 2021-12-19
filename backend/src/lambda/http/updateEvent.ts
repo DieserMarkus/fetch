@@ -4,11 +4,10 @@ import * as middy from 'middy'
 import { cors, httpErrorHandler } from 'middy/middlewares'
 import { createLogger } from '../../utils/logger'
 import { getUserId } from '../utils'
-import { EventUtils } from '../../helpers/eventUtils'
 import { UpdateEventRequest } from '../../requests/UpdateEventRequest'
+import { checkOwnership, updateEvent } from '../../businessLogic/events'
 
 const logger = createLogger('UpdateEvent')
-const eventUtils = new EventUtils();
 
 export const handler = middy(
   async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
@@ -20,13 +19,13 @@ export const handler = middy(
     const eventId = event.pathParameters.eventId
     const updatedEvent: UpdateEventRequest = JSON.parse(event.body)
 
-    const owner = await eventUtils.checkOwnership(userId, eventId)
+    const owner = await checkOwnership(userId, eventId)
     logger.info('checkOwnership', {owner})
 
     if (owner) {
 
       logger.info('Updating event', {userId, eventId, modifiedDate})
-      await eventUtils.updateEvent(userId, eventId, modifiedDate.toString(), updatedEvent)
+      await updateEvent(userId, eventId, modifiedDate.toString(), updatedEvent)
 
       return {
         statusCode: 202,

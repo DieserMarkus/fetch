@@ -3,8 +3,8 @@ export interface Item {
   itemId: string
   name: string
   createdBy: string
-  creationDate: string
+  createdDate: string
   modifiedDate?: string
-  done: boolean
+  done?: boolean
   attachmentUrl?: string
 }

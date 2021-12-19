@@ -4,24 +4,23 @@ import * as middy from 'middy'
 import { cors, httpErrorHandler } from 'middy/middlewares'
 import { createLogger } from '../../utils/logger'
 import { getUserId, getUserName } from '../utils';
-import { EventUtils } from '../../helpers/eventUtils'
 import { CreateEventRequest } from '../../requests/CreateEventRequest'
+import { addExistingEvent, createEvent } from '../../businessLogic/events'
 
 const logger = createLogger('CreateEvent')
-const eventUtils = new EventUtils();
 
 export const handler = middy(
-  async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
+  async (gatewayEvent: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
 
     const createdDate = new Date()
     createdDate.setDate(createdDate.getUTCDate())
 
-    const userId = getUserId(event)
-    const createdBy = getUserName(event)
-    const newEvent: CreateEventRequest = JSON.parse(event.body)
+    const userId = getUserId(gatewayEvent)
+    const createdBy = getUserName(gatewayEvent)
+    const newEvent: CreateEventRequest = JSON.parse(gatewayEvent.body)
     
-    const eventId = await eventUtils.createEvent(userId, createdBy, createdDate.toString(), newEvent)
-    await eventUtils.addExistingEvent(userId, eventId, createdDate.toString(), true)
+    const eventId = await createEvent(userId, createdBy, createdDate.toString(), newEvent)
+    await addExistingEvent(userId, eventId, createdDate.toString(), true)
 
     logger.info('Creating event', {userId, createdBy, createdDate, eventId})
 

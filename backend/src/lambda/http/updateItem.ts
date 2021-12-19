@@ -3,12 +3,11 @@ import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda'
 import * as middy from 'middy'
 import { cors, httpErrorHandler } from 'middy/middlewares'
 import { createLogger } from '../../utils/logger'
-import { getUserName } from '../utils';
-import { ItemUtils } from '../../helpers/itemUtils'
+import { getUserName } from '../utils'
 import { UpdateItemRequest } from '../../requests/UpdateItemRequest'
+import { updateItem } from '../../businessLogic/items'
 
 const logger = createLogger('UpdateItem')
-const itemUtils = new ItemUtils();
 
 export const handler = middy(
   async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
@@ -23,7 +22,7 @@ export const handler = middy(
 
     logger.info('Updating item', {eventId, itemId, modifiedDate})
 
-    await itemUtils.updateItem(eventId, itemId, modifiedDate.toString(), createdBy, updatedItem)
+    await updateItem(eventId, itemId, modifiedDate.toString(), createdBy, updatedItem)
 
     return {
       statusCode: 202,

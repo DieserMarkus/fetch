@@ -1,16 +1,15 @@
 import 'source-map-support/register'
-import * as uuid from 'uuid';
-import * as AWS from 'aws-sdk';
-import * as AWSXRay from "aws-xray-sdk";
+import * as uuid from 'uuid'
+import * as AWS from 'aws-sdk'
+import * as AWSXRay from 'aws-xray-sdk'
 import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda'
 import * as middy from 'middy'
 import { cors, httpErrorHandler } from 'middy/middlewares'
 import { createLogger } from '../../utils/logger'
-import { AttachmentUtils } from '../../helpers/AttachmentUtils'
 import { getUserId } from '../utils'
+import { updateEventAttachmentUrl } from '../../businessLogic/events'
 
-const logger = createLogger('GenerateUploadURL')
-const attachmentUtils = new AttachmentUtils()
+const logger = createLogger('GenerateEventUploadURL')
 const bucketName = process.env.ATTACHMENT_S3_BUCKET
 const urlExpiration = process.env.SIGNED_URL_EXPIRATION
 const XAWS = AWSXRay.captureAWS(AWS)
@@ -24,7 +23,7 @@ export const handler = middy(
 
     const attachmentId = uuid()
     const userId = getUserId(event)
-    const eventId = event.pathParameters.eventId;
+    const eventId = event.pathParameters.eventId
 
     logger.info('Generating attachment URL', {userId, eventId})
 
@@ -34,7 +33,7 @@ export const handler = middy(
       Expires: parseInt(urlExpiration)
     });
 
-    await attachmentUtils.updateEventAttachmentUrl(userId, eventId, modifiedDate, attachmentId)
+    await updateEventAttachmentUrl(userId, eventId, modifiedDate, attachmentId)
     
     return {
       statusCode: 200,

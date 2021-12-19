@@ -4,11 +4,10 @@ import * as middy from 'middy'
 import { cors, httpErrorHandler } from 'middy/middlewares'
 import { createLogger } from '../../utils/logger'
 import { getUserId, getUserName } from '../utils'
-import { ItemUtils } from '../../helpers/itemUtils'
 import { CreateItemRequest } from '../../requests/CreateItemRequest'
+import { createItem } from '../../businessLogic/items'
 
 const logger = createLogger('CreateItem')
-const itemUtils = new ItemUtils()
 
 export const handler = middy(
   async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
@@ -20,7 +19,7 @@ export const handler = middy(
     const createdBy = getUserName(event)
     const eventId = event.pathParameters.eventId
     const newItem: CreateItemRequest = JSON.parse(event.body)
-    const itemId = await itemUtils.createItem(userId, eventId, createdBy, createdDate.toString(), newItem)
+    const itemId = await createItem(userId, eventId, createdBy, createdDate.toString(), newItem)
 
     logger.info('Creating item', {userId, createdBy, createdDate, itemId})
 
@@ -49,4 +48,4 @@ export const handler = middy(
       cors({
         credentials: true
   })
- )
+)

@@ -3,10 +3,9 @@ import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda'
 import * as middy from 'middy'
 import { cors, httpErrorHandler } from 'middy/middlewares'
 import { createLogger } from '../../utils/logger'
-import { ItemUtils } from '../../helpers/itemUtils'
+import { deleteItem } from '../../businessLogic/items'
 
 const logger = createLogger('DeleteItem')
-const itemUtils = new ItemUtils()
 
 export const handler = middy(
   async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
@@ -16,7 +15,7 @@ export const handler = middy(
 
     logger.info('Deleting item', {eventId, itemId})
 
-    await itemUtils.deleteItem(eventId, itemId)
+    await deleteItem(eventId, itemId)
 
     return {
       statusCode: 202,
